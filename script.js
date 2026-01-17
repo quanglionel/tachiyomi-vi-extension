@@ -582,8 +582,16 @@ function exportToExcel() {
     worksheet['!cols'] = wscols;
 
     // Export file
-    const dateStr = new Date().toISOString().split('T')[0];
-    XLSX.writeFile(workbook, `Tachiyomi_Extensions_VI_${dateStr}.xlsx`);
+    try {
+        const dateStr = new Date().toISOString().split('T')[0];
+        const filename = `Tachiyomi_Extensions_VI_${dateStr}.xlsx`;
+
+        // Use writeFile for standard browsers
+        XLSX.writeFile(workbook, filename);
+    } catch (error) {
+        console.error('Export error:', error);
+        alert('Có lỗi xảy ra khi xuất file. Vui lòng thử lại!');
+    }
 }
 
 // Get initials from name
