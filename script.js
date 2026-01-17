@@ -54,6 +54,16 @@ document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
     setupEventListeners();
+
+    // Auto switch to card view on mobile
+    if (window.innerWidth < 768) {
+        isCardView = true;
+        tableView.style.display = 'none';
+        cardView.style.display = 'grid';
+        gridIcon.style.display = 'none';
+        listIcon.style.display = 'block';
+    }
+
     await loadData();
     populateLanguageFilter();
 }
