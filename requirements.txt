@@ -1,0 +1,2 @@
+# Không cần thư viện ngoài vì dùng thư viện chuẩn của Python
+# Nếu sau này bạn dùng Flask hay FastAPI thì sẽ thêm vào đây

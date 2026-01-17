@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tachiyomi Extensions Viewer</title>
+    <meta name="description" content="Xem và tìm kiếm các extension Tachiyomi">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h1>Tachiyomi Extensions</h1>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalExtensions">0</span>
+                        <span class="stat-label">Extensions</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalSources">0</span>
+                        <span class="stat-label">Sources</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
+                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <input type="text" id="searchInput" placeholder="Tìm kiếm extension, source, ngôn ngữ..."
+                    class="search-input">
+                <button class="clear-btn" id="clearSearch" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+            <div class="filters">
+                <select id="langFilter" class="filter-select">
+                    <option value="vi">Tiếng Việt</option>
+                </select>
+                <select id="nsfwFilter" class="filter-select">
+                    <option value="">Tất cả</option>
+                    <option value="0">SFW</option>
+                    <option value="1">NSFW</option>
+                </select>
+                <button class="view-toggle" id="viewToggle">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="gridIcon">
+                        <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="listIcon"
+                        style="display: none;">
+                        <path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results info -->
+        <div class="results-info">
+            <span id="resultsCount">Đang tải...</span>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container" id="tableView">
+            <table class="data-table" id="extensionsTable">
+                <thead>
+                    <tr>
+                        <th data-sort="name">
+                            <div class="th-content">
+                                <span>Tên Extension</span>
+                                <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </th>
+                        <th data-sort="pkg">
+                            <div class="th-content">
+                                <span>Package</span>
+                                <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </th>
+                        <th data-sort="lang">
+                            <div class="th-content">
+                                <span>Ngôn ngữ</span>
+                                <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </th>
+                        <th data-sort="version">
+                            <div class="th-content">
+                                <span>Phiên bản</span>
+                                <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </th>
+                        <th data-sort="nsfw">
+                            <div class="th-content">
+                                <span>NSFW</span>
+                                <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </th>
+                        <th data-sort="sources">
+                            <div class="th-content">
+                                <span>Sources</span>
+                                <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </th>
+                        <th data-sort="repo">
+                            <div class="th-content">
+                                <span>Kho</span>
+                                <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </th>
+                        <th>Links</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Card View -->
+        <div class="card-container" id="cardView" style="display: none;">
+            <!-- Cards will be inserted here -->
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Đang tải dữ liệu...</p>
+        </div>
+
+        <!-- No Results -->
+        <div class="no-results" id="noResults" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
+                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M8 8L14 14M14 8L8 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <h3>Không tìm thấy kết quả</h3>
+            <p>Thử thay đổi từ khóa hoặc bộ lọc</p>
+        </div>
+
+        <!-- Modal for Source Details -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal" id="sourceModal">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Sources</h2>
+                    <button class="modal-close" id="modalClose">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Source details will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
