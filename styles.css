@@ -189,6 +189,18 @@ body {
 .search-container {
     flex: 1;
     position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .search-input {
