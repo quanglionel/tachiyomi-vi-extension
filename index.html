@@ -13,6 +13,8 @@
 </head>
 
 <body>
+    <!-- Background Decoration -->
+    <div class="bg-glow"></div>
     <div class="app-container">
         <!-- Header -->
         <header class="header">
@@ -28,14 +30,14 @@
                                 stroke-linejoin="round" />
                         </svg>
                     </div>
-                    <h1>Tachiyomi Extensions</h1>
+                    <h1>Tachiyomi <span class="accent-text">Extensions</span></h1>
                 </div>
                 <div class="stats">
-                    <div class="stat-item">
+                    <div class="stat-card">
                         <span class="stat-value" id="totalExtensions">0</span>
                         <span class="stat-label">Extensions</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-card">
                         <span class="stat-value" id="totalSources">0</span>
                         <span class="stat-label">Sources</span>
                     </div>
@@ -44,42 +46,65 @@
         </header>
 
         <!-- Controls -->
-        <div class="controls">
-            <div class="search-container">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
-                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-                <input type="text" id="searchInput" placeholder="Tìm kiếm extension, source, ngôn ngữ..."
-                    class="search-input">
-                <button class="clear-btn" id="clearSearch" style="display: none;">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <div class="controls-container">
+            <div class="controls">
+                <div class="search-container">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                </button>
-            </div>
-            <div class="filters">
-                <select id="langFilter" class="filter-select">
-                    <option value="vi">Tiếng Việt</option>
-                </select>
-                <select id="nsfwFilter" class="filter-select">
-                    <option value="">Tất cả</option>
-                    <option value="0">SFW</option>
-                    <option value="1">NSFW</option>
-                </select>
-                <button class="view-toggle" id="viewToggle">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="gridIcon">
-                        <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
-                        <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
-                        <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
-                        <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
-                    </svg>
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="listIcon"
-                        style="display: none;">
-                        <path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" />
-                    </svg>
-                </button>
+                    <input type="text" id="searchInput" placeholder="Tìm kiếm extension, source, ngôn ngữ..."
+                        class="search-input">
+                    <button class="clear-btn" id="clearSearch" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="filters">
+                    <div class="select-wrapper">
+                        <select id="langFilter" class="filter-select">
+                            <option value="vi">Tiếng Việt</option>
+                        </select>
+                    </div>
+                    <div class="select-wrapper">
+                        <select id="nsfwFilter" class="filter-select">
+                            <option value="">Tất cả</option>
+                            <option value="0">SFW</option>
+                            <option value="1">NSFW</option>
+                        </select>
+                    </div>
+                    <button class="view-toggle" id="viewToggle" title="Chuyển đổi chế độ hiển thị">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" id="gridIcon">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" id="listIcon" style="display: none;">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="export-btn" id="exportExcel" title="Xuất file Excel">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Xuất Excel</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -103,7 +128,7 @@
                                 </svg>
                             </div>
                         </th>
-                        <th data-sort="pkg">
+                        <th data-sort="pkg" class="hide-mobile">
                             <div class="th-content">
                                 <span>Package</span>
                                 <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
@@ -143,9 +168,9 @@
                                 </svg>
                             </div>
                         </th>
-                        <th data-sort="sources">
+                        <th data-sort="repo">
                             <div class="th-content">
-                                <span>Sources</span>
+                                <span>Kho</span>
                                 <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2"
@@ -153,9 +178,9 @@
                                 </svg>
                             </div>
                         </th>
-                        <th data-sort="repo">
+                        <th data-sort="sources">
                             <div class="th-content">
-                                <span>Kho</span>
+                                <span>Sources</span>
                                 <svg class="sort-icon" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2"
@@ -213,6 +238,8 @@
         </div>
     </div>
 
+    <!-- SheetJS Library -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <script src="script.js"></script>
 </body>
 

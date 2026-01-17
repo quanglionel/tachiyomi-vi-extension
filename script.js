@@ -24,6 +24,7 @@ const modalOverlay = document.getElementById('modalOverlay');
 const modalClose = document.getElementById('modalClose');
 const modalTitle = document.getElementById('modalTitle');
 const modalBody = document.getElementById('modalBody');
+const exportExcelBtn = document.getElementById('exportExcel');
 
 // Configuration for multiple repositories
 const REPOS = [
@@ -160,6 +161,11 @@ function setupEventListeners() {
     document.querySelectorAll('.data-table th[data-sort]').forEach(th => {
         th.addEventListener('click', () => handleSort(th.dataset.sort));
     });
+
+    // Export Excel
+    if (exportExcelBtn) {
+        exportExcelBtn.addEventListener('click', exportToExcel);
+    }
 
     // Modal
     modalOverlay.addEventListener('click', (e) => {
@@ -347,14 +353,14 @@ function renderData() {
 // Render table
 function renderTable() {
     tableBody.innerHTML = filteredExtensions.map(ext => `
-        <tr>
+        <tr class="fade-in">
             <td>
                 <div class="extension-name">
-                    <div class="extension-icon">${getInitials(ext.name)}</div>
-                    <span>${escapeHtml(ext.name)}</span>
+                    <div class="extension-icon-small">${getInitials(ext.name)}</div>
+                    <span class="name-text">${escapeHtml(ext.name)}</span>
                 </div>
             </td>
-            <td>
+            <td class="hide-mobile">
                 <span class="package-name" title="${escapeHtml(ext.pkg)}">${escapeHtml(ext.pkg)}</span>
             </td>
             <td>
@@ -367,28 +373,29 @@ function renderTable() {
                 <span class="nsfw-badge ${ext.nsfw ? 'nsfw' : 'sfw'}">${ext.nsfw ? 'NSFW' : 'SFW'}</span>
             </td>
             <td>
-                <span class="repo-badge ${ext.repoName.toLowerCase()}">${ext.repoName}</span>
+                <span class="repo-tag ${ext.repoName.toLowerCase()}">${ext.repoName}</span>
             </td>
             <td>
-                <button class="sources-btn" onclick='showSources(${JSON.stringify(ext).replace(/'/g, "\\'")})'> 
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 12C21 12 17 4 12 4C7 4 3 12 3 12C3 12 7 20 12 20C17 20 21 12 21 12Z" stroke="currentColor" stroke-width="2"/>
-                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                <button class="action-btn-sources" onclick='showSources(${JSON.stringify(ext).replace(/'/g, "\\'")})'> 
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
                     </svg>
-                    ${ext.sources?.length || 0} sources
+                    <span>${ext.sources?.length || 0} Sources</span>
                 </button>
             </td>
             <td>
-                <div style="display: flex; gap: 8px;">
-                    <a href="${ext.repoGithub}/tree/master/src/${ext.lang}/${ext.pkg.split('.').pop()}" target="_blank" class="apk-link" title="Xem mã nguồn trên GitHub">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12c0-5.523-4.477-10-10-10z" fill="currentColor"/>
+                <div class="action-group">
+                    <a href="${ext.repoGithub}/tree/master/src/${ext.lang}/${ext.pkg.split('.').pop()}" target="_blank" class="icon-btn" title="Xem mã nguồn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
                         </svg>
                     </a>
-                    <a href="#" class="apk-link" title="${escapeHtml(ext.apk)}">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 15V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M7 10L12 15M12 15L17 10M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <a href="${ext.apk}" class="icon-btn highlight" title="Tải APK">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
                     </a>
                 </div>
@@ -400,42 +407,38 @@ function renderTable() {
 // Render cards
 function renderCards() {
     cardView.innerHTML = filteredExtensions.map(ext => `
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon">${getInitials(ext.name)}</div>
-                <div class="card-title">
+        <div class="card-premium fade-in">
+            <div class="card-header-premium">
+                <div class="extension-icon-large">${getInitials(ext.name)}</div>
+                <div class="card-titles">
                     <h3>${escapeHtml(ext.name)}</h3>
-                    <p>${escapeHtml(ext.pkg)}</p>
+                    <code class="pkg-text">${escapeHtml(ext.pkg)}</code>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="card-meta">
+            <div class="card-body-premium">
+                <div class="card-tags">
                     <span class="lang-badge">${escapeHtml(ext.lang || 'N/A')}</span>
                     <span class="version-badge">v${escapeHtml(ext.version)}</span>
                     <span class="nsfw-badge ${ext.nsfw ? 'nsfw' : 'sfw'}">${ext.nsfw ? 'NSFW' : 'SFW'}</span>
-                    <span class="repo-badge ${ext.repoName.toLowerCase()}">${ext.repoName}</span>
                 </div>
-                <div class="card-actions">
-                    <button class="sources-btn" onclick='showSources(${JSON.stringify(ext).replace(/'/g, "\\'")})'>
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 12C21 12 17 4 12 4C7 4 3 12 3 12C3 12 7 20 12 20C17 20 21 12 21 12Z" stroke="currentColor" stroke-width="2"/>
-                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                        ${ext.sources?.length || 0}
-                    </button>
-                    <a href="${ext.repoGithub}/tree/master/src/${ext.lang}/${ext.pkg.split('.').pop()}" target="_blank" class="apk-link sources-btn" style="background: transparent; border: 1px solid #333; color: var(--text-primary);">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;">
-                            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12c0-5.523-4.477-10-10-10z" fill="currentColor"/>
-                        </svg>
-                        Code
-                    </a>
-                    <a href="#" class="apk-link sources-btn" style="background: transparent; border: 1px solid var(--accent-primary); color: var(--accent-primary);">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 15V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M7 10L12 15M12 15L17 10M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        APK
-                    </a>
+                <div class="card-footer">
+                    <span class="repo-tag ${ext.repoName.toLowerCase()}">${ext.repoName}</span>
+                    <div class="action-buttons">
+                        <button class="action-btn-mini" onclick='showSources(${JSON.stringify(ext).replace(/'/g, "\\'")})' title="Xem Sources">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <span>${ext.sources?.length || 0}</span>
+                        </button>
+                        <a href="${ext.apk}" class="action-btn-mini highlight" title="Tải APK">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 15v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -532,6 +535,55 @@ async function checkUrlStatus(url, index) {
 function closeModal() {
     modalOverlay.classList.remove('active');
     document.body.style.overflow = '';
+}
+
+// Export to Excel
+function exportToExcel() {
+    if (!filteredExtensions || filteredExtensions.length === 0) {
+        alert('Không có dữ liệu để xuất!');
+        return;
+    }
+
+    if (typeof XLSX === 'undefined') {
+        alert('Đang tải thư viện xuất Excel, vui lòng thử lại sau giây lát!');
+        return;
+    }
+
+    // Prepare data for Excel
+    const data = filteredExtensions.map(ext => ({
+        'Tên Extension': ext.name,
+        'Package': ext.pkg,
+        'Ngôn ngữ': getLanguageName(ext.lang),
+        'Phiên bản': ext.version,
+        'NSFW': ext.nsfw ? 'Có' : 'Không',
+        'Kho lưu trữ': ext.repoName,
+        'Số lượng Source': ext.sources?.length || 0,
+        'Link APK': ext.apk
+    }));
+
+    // Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tachiyomi Extensions");
+
+    // Adjust column widths
+    const wscols = [
+        { wch: 35 }, // Tên
+        { wch: 45 }, // Pkg
+        { wch: 15 }, // Lang
+        { wch: 15 }, // Version
+        { wch: 10 }, // NSFW
+        { wch: 15 }, // Repo
+        { wch: 15 }, // Sources
+        { wch: 60 }, // APK
+    ];
+    worksheet['!cols'] = wscols;
+
+    // Export file
+    const dateStr = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(workbook, `Tachiyomi_Extensions_VI_${dateStr}.xlsx`);
 }
 
 // Get initials from name
