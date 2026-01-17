@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: tachiyomi-vi-extension
+    env: python
+    buildCommand: ""
+    startCommand: "python server.py"
+    envVars:
+      - key: PORT
+        value: 80
